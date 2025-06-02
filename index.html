@@ -9,26 +9,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- BEFORE PURCHASE POPUP -->
 <div id="popup-overlay" class="popup-overlay" style="display: none;">
   <div class="popup-box">
     <button id="popup-close" class="popup-close-btn">&times;</button>
     <h3>Before You Buy</h3>
-    <p>Join our Discord to open a ticket and send your thumbnail request after purchase.</p>
-<a id="join-discord" href="https://discord.gg/Ek5dPqgxEs" target="_blank" class="btn-shared btn-main" style="margin-top: 15px;">Join Discord</a>
-<button id="continue-to-payment" class="btn-shared btn-secondary" disabled style="margin-top: 15px;">Continue to Payment</button>
+    <p>Please choose how you'd like to send your thumbnail request after purchase:</p>
+    <a id="join-discord" href="https://discord.gg/Ek5dPqgxEs" target="_blank" class="btn-shared btn-main" style="margin-top: 15px;">Join Discord</a>
+    <a id="use-email" href="mailto:lboydubz@gmail.com" class="btn-shared btn-main" style="margin-top: 10px;">Email Us</a>
+    <button id="continue-to-payment" class="btn-shared btn-secondary" disabled style="margin-top: 15px;">Continue to Payment</button>
   </div>
 </div>
-<!-- After Purchase Popup -->
+<!-- AFTER PURCHASE POPUP -->
 <div id="after-popup-overlay" class="popup-overlay" style="display: none;">
   <div class="popup-box">
     <button id="after-popup-close" class="popup-close-btn">&times;</button>
     <h3>Thank You for Your Purchase!</h3>
-    <p>You're almost there! Please join our Discord and open a ticket to submit your thumbnail request.</p>
-    <a id="join-discord-again" href="https://discord.gg/Ek5dPqgxEs" target="_blank" class="btn-shared btn-main" style="margin-top: 15px;">Join Discord</a>
+    <p>You're almost there! Please choose one of the following to send your request:</p>
+    <a href="https://discord.gg/Ek5dPqgxEs" target="_blank" class="btn-shared btn-main" style="margin-top: 15px;">Join Discord</a>
+    <a href="mailto:lboydubz@gmail.com" class="btn-shared btn-main" style="margin-top: 10px;">Email Us</a>
   </div>
 </div>
   <header>
-    <img src="https://i.postimg.cc/JzNrcBMd/Untitled-design-75.png" alt="Sky Thumbnails Logo">
+<a href="#top">
+  <img src="https://i.postimg.cc/JzNrcBMd/Untitled-design-75.png" alt="Sky Thumbnails Logo">
+</a>
     <nav>
       <a href="#thumbnails">Thumbnails</a>
       <a href="#pricing">Pricing</a>
@@ -68,12 +73,12 @@
       <div class="price-card">
         <h3>Starter</h3>
         <p>1 Thumbnail<br>2 Revision<br><strong class="glow-price">$15</strong><br>
-        <a class="btn-buy" href="https://buy.stripe.com/00wcN660weejfBebXQbQY05" target="_blank">Buy Now</a>
+        <a class="btn-buy" href="https://buy.stripe.com/14A8wQagM1rxdt61jcbQY0c" target="_blank">Buy Now</a>
       </div>
       <div class="price-card">
         <h3>Standard</h3>
         <p>1 Thumbnail<br>4 Revisions<br>Fast Delivery<br><strong class="glow-price">$25</strong><br>
-        <a class="btn-buy" href="https://buy.stripe.com/fZu6oIdsYdaf60Ege6bQY06" target="_blank">Buy Now</a>
+        <a class="btn-buy" href="https://buy.stripe.com/dRmaEY74Ac6bcp2bXQbQY0b" target="_blank">Buy Now</a>
       </div>
       <div class="price-card">
         <h3>Premium Pack</h3>
@@ -213,45 +218,50 @@
   };
 </script>
 <script>
-  let selectedStripeUrl = "";
+let selectedStripeUrl = "";
+let joined = sessionStorage.getItem("joined") === "true";
 
-  // Check if the user already joined the Discord this session
-  let discordJoined = sessionStorage.getItem("discordJoined") === "true";
+function enableContinue() {
+  joined = true;
+  sessionStorage.setItem("joined", "true");
+  document.getElementById("continue-to-payment").disabled = false;
+}
 
-  document.querySelectorAll('.btn-buy').forEach(button => {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      selectedStripeUrl = this.getAttribute('href');
+document.querySelectorAll('.btn-buy').forEach(button => {
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    selectedStripeUrl = this.getAttribute('href');
 
-      if (discordJoined) {
-        // Go straight to payment
-        window.open(selectedStripeUrl, '_blank');
-      } else {
-        // Show popup first
-        document.getElementById('popup-overlay').style.display = 'flex';
-        document.getElementById('continue-to-payment').disabled = true;
-      }
-    });
-  });
-
-  document.getElementById('join-discord').addEventListener('click', function () {
-    discordJoined = true;
-    sessionStorage.setItem("discordJoined", "true");
-    document.getElementById('continue-to-payment').disabled = false;
-    this.textContent = "✅ Joined!";
-    this.style.background = "#28a745"; // green
-  });
-
-  document.getElementById('continue-to-payment').addEventListener('click', function () {
-    if (selectedStripeUrl && discordJoined) {
+    if (joined) {
       window.open(selectedStripeUrl, '_blank');
-      document.getElementById('popup-overlay').style.display = 'none';
+    } else {
+      document.getElementById('popup-overlay').style.display = 'flex';
+      document.getElementById('continue-to-payment').disabled = true;
     }
   });
+});
 
-  document.getElementById('popup-close').addEventListener('click', function () {
+document.getElementById('join-discord').addEventListener('click', function () {
+  enableContinue();
+  this.textContent = "✅ Joined!";
+  this.style.background = "#28a745";
+});
+
+document.getElementById('use-email').addEventListener('click', function () {
+  enableContinue();
+  this.textContent = "✅ Selected!";
+  this.style.background = "#28a745";
+});
+
+document.getElementById('continue-to-payment').addEventListener('click', function () {
+  if (selectedStripeUrl && joined) {
+    window.open(selectedStripeUrl, '_blank');
     document.getElementById('popup-overlay').style.display = 'none';
-  });
+    setTimeout(function () {
+      document.getElementById('after-popup-overlay').style.display = 'flex';
+    }, 3000);
+  }
+});
 </script>
 <script>
 // Check if Discord is joined and after payment logic
@@ -503,6 +513,20 @@ document.getElementById('join-discord-again').addEventListener('click', function
       });
     }
   });
+</script>
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      window.scrollTo({
+        top: target.offsetTop - 80,
+        behavior: 'smooth'
+      });
+    }
+  });
+});
 </script>
 </body>
 </html>
