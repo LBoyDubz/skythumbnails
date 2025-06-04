@@ -603,8 +603,7 @@ nav a:hover {
   }
 }
 
-
-/* === Mobile Optimization === */
+/* === Mobile Optimization Enhanced === */
 @media (max-width: 768px) {
   header {
     flex-direction: column;
@@ -639,6 +638,11 @@ nav a:hover {
     margin-top: 20px;
   }
 
+  .hero-img img {
+    max-width: 90vw;
+    height: auto;
+  }
+
   .pricing,
   .thumbnails,
   .creators,
@@ -653,6 +657,13 @@ nav a:hover {
   .feature-card {
     width: 100%;
     max-width: 90vw;
+  }
+
+  .thumb-card img,
+  .creator-card img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
   }
 
   .footer-content {
@@ -680,5 +691,11 @@ nav a:hover {
 
   #contact {
     padding: 60px 20px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 }
